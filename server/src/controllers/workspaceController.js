@@ -24,8 +24,10 @@ const createWorkspace = async (req, res) => {
             message: "Workspace created successfully",
             workspace,
         });
+
     } catch (error) {
         console.error(error);
+
         return res.status(500).json({
             success: false,
             message: "Internal Server Error",
@@ -33,19 +35,24 @@ const createWorkspace = async (req, res) => {
     }
 };
 
-// Get All Workspaces
+// Get My Workspaces
 const getMyWorkspaces = async (req, res) => {
     try {
+
         const workspaces = await Workspace.find({
             members: req.user._id,
-        });
+        })
+            .populate("owner", "fullName email")
+            .populate("members", "fullName email");
 
         return res.status(200).json({
             success: true,
             workspaces,
         });
+
     } catch (error) {
         console.error(error);
+
         return res.status(500).json({
             success: false,
             message: "Internal Server Error",
@@ -53,10 +60,16 @@ const getMyWorkspaces = async (req, res) => {
     }
 };
 
-// Get Single Workspace
+// Get Workspace By ID
 const getWorkspaceById = async (req, res) => {
     try {
-        const workspace = await Workspace.findById(req.params.id);
+
+        const workspace = await Workspace.findOne({
+            _id: req.params.id,
+            members: req.user._id,
+        })
+            .populate("owner", "fullName email")
+            .populate("members", "fullName email");
 
         if (!workspace) {
             return res.status(404).json({
@@ -69,8 +82,84 @@ const getWorkspaceById = async (req, res) => {
             success: true,
             workspace,
         });
+
     } catch (error) {
         console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+        });
+    }
+};
+
+// Update Workspace
+const updateWorkspace = async (req, res) => {
+    try {
+
+        const { name, description } = req.body;
+
+        const workspace = await Workspace.findOneAndUpdate(
+            {
+                _id: req.params.id,
+                owner: req.user._id,
+            },
+            {
+                name,
+                description,
+            },
+            {
+                new: true,
+            }
+        );
+
+        if (!workspace) {
+            return res.status(404).json({
+                success: false,
+                message: "Workspace not found or unauthorized",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Workspace updated successfully",
+            workspace,
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+        });
+    }
+};
+
+// Delete Workspace
+const deleteWorkspace = async (req, res) => {
+    try {
+
+        const workspace = await Workspace.findOneAndDelete({
+            _id: req.params.id,
+            owner: req.user._id,
+        });
+
+        if (!workspace) {
+            return res.status(404).json({
+                success: false,
+                message: "Workspace not found or unauthorized",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Workspace deleted successfully",
+        });
+
+    } catch (error) {
+        console.error(error);
+
         return res.status(500).json({
             success: false,
             message: "Internal Server Error",
@@ -82,4 +171,6 @@ module.exports = {
     createWorkspace,
     getMyWorkspaces,
     getWorkspaceById,
+    updateWorkspace,
+    deleteWorkspace,
 };
