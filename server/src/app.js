@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const workspaceRoutes = require("./routes/workspaceRoutes");
 
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/workspaces", workspaceRoutes);
 
 
 app.get("/", (req, res) => {
@@ -18,3 +20,6 @@ app.get("/", (req, res) => {
 });
 
 module.exports = app;
+
+//* Registers a group of routes under a common URL prefix.
+//* Keeps routing modular and organized.
