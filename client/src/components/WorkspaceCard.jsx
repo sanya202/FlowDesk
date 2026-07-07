@@ -1,43 +1,50 @@
-import { useNavigate } from "react-router-dom";
+import { FiFolder, FiArrowRight, FiMoreVertical } from "react-icons/fi";
+import Card from "./ui/Card";
+import Button from "./ui/Button";
 
-function WorkspaceCard({ workspace }) {
-  const navigate = useNavigate();
-
+function WorkspaceCard({ workspace, onOpen }) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-      <div className="flex items-center gap-3 mb-5">
-        <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-2xl">
-          📁
+    <Card className="p-6">
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
+            <FiFolder className="text-blue-600 text-2xl" />
+          </div>
+
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              {workspace.name}
+            </h2>
+
+            <p className="text-gray-500 text-sm mt-1">
+              Workspace
+            </p>
+          </div>
         </div>
 
-        <div>
-          <h2 className="text-xl font-semibold text-gray-800">
-            {workspace.name}
-          </h2>
-
-          <p className="text-sm text-gray-500">
-            Workspace
-          </p>
-        </div>
+        <button className="p-2 rounded-lg hover:bg-gray-100 transition">
+          <FiMoreVertical className="text-gray-500" />
+        </button>
       </div>
 
-      <p className="text-gray-600 min-h-[60px]">
-        {workspace.description || "No description added yet."}
+      <p className="mt-5 text-gray-600 leading-relaxed min-h-[48px]">
+        {workspace.description || "No description provided."}
       </p>
 
-      <div className="border-t mt-6 pt-5 flex justify-between items-center">
+      <div className="mt-6 flex justify-between items-center border-t pt-4">
         <span className="text-sm text-gray-400">
           Ready to organize
         </span>
 
-        <button
-          onClick={() => navigate(`/workspace/${workspace._id}`)}
-          className="text-blue-600 font-semibold hover:underline"
+        <Button
+          onClick={() => onOpen(workspace._id)}
+          className="px-4 py-2"
         >
-          Open →
-        </button>
+          Open
+          <FiArrowRight />
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 }
 

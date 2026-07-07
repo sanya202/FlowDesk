@@ -4,36 +4,29 @@ import api from "../../services/api";
 import Navbar from "../../components/Navbar";
 import WorkspaceCard from "../../components/WorkspaceCard";
 import CreateWorkspaceModal from "../../components/CreateWorkspaceModal";
+import Button from "../../components/ui/Button";
+import { useAuth } from "../../context/AuthContext";
 
 function Dashboard() {
-  const [user, setUser] = useState(null);
+  const { user } = useAuth();
   const [workspaces, setWorkspaces] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
+  const fetchWorkspaces = async () => {
+    try {
+      const response = await api.get("/workspaces");
 
-    if (!token || !storedUser) {
-      navigate("/login");
-      return;
+      setWorkspaces(response.data.workspaces);
+    } catch (error) {
+      console.log(error.response?.data);
     }
+  };
 
-    setUser(JSON.parse(storedUser));
+  useEffect(() => {
     fetchWorkspaces();
   }, []);
-
-  const fetchWorkspaces = async () => {
-  try {
-    const response = await api.get("/workspaces");
-
-    setWorkspaces(response.data.workspaces);
-  } catch (error) {
-    console.log(error.response?.data);
-  }
-};
 
   if (!user) {
     return (
@@ -45,11 +38,10 @@ function Dashboard() {
 
   return (
     <>
-      <Navbar user={user} />
+      <Navbar />
 
       <div className="min-h-screen bg-gray-100">
         <div className="max-w-7xl mx-auto px-8 py-8">
-
           {/* Welcome Section */}
 
           <div className="mb-8">
@@ -65,11 +57,8 @@ function Dashboard() {
           {/* Statistics */}
 
           <div className="grid md:grid-cols-3 gap-6 mb-10">
-
             <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-200">
-              <p className="text-gray-500 text-sm">
-                Total Workspaces
-              </p>
+              <p className="text-gray-500 text-sm">Total Workspaces</p>
 
               <h3 className="text-4xl font-bold mt-3 text-blue-600">
                 {workspaces.length}
@@ -77,74 +66,49 @@ function Dashboard() {
             </div>
 
             <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-200">
-              <p className="text-gray-500 text-sm">
-                Projects
-              </p>
+              <p className="text-gray-500 text-sm">Projects</p>
 
-              <h3 className="text-4xl font-bold mt-3 text-green-600">
-                --
-              </h3>
+              <h3 className="text-4xl font-bold mt-3 text-green-600">--</h3>
             </div>
 
             <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-200">
-              <p className="text-gray-500 text-sm">
-                Tasks
-              </p>
+              <p className="text-gray-500 text-sm">Tasks</p>
 
-              <h3 className="text-4xl font-bold mt-3 text-purple-600">
-                --
-              </h3>
+              <h3 className="text-4xl font-bold mt-3 text-purple-600">--</h3>
             </div>
-
           </div>
 
           {/* Workspace Header */}
 
           <div className="flex justify-between items-center mb-6">
-
             <div>
-              <h2 className="text-2xl font-bold">
-                Your Workspaces
-              </h2>
+              <h2 className="text-2xl font-bold">Your Workspaces</h2>
 
               <p className="text-gray-500">
                 Create and manage your workspaces.
               </p>
             </div>
 
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition"
-            >
+            <Button onClick={() => setIsModalOpen(true)}>
               + New Workspace
-            </button>
-
+            </Button>
           </div>
 
           {/* Workspace Grid */}
 
           {workspaces.length === 0 ? (
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-16 text-center">
+              <div className="text-6xl mb-5">📂</div>
 
-              <div className="text-6xl mb-5">
-                📂
-              </div>
-
-              <h2 className="text-2xl font-bold mb-3">
-                No workspaces yet
-              </h2>
+              <h2 className="text-2xl font-bold mb-3">No workspaces yet</h2>
 
               <p className="text-gray-500 mb-6">
                 Create your first workspace and start organizing your projects.
               </p>
 
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl"
-              >
+              <Button onClick={() => setIsModalOpen(true)}>
                 Create Workspace
-              </button>
-
+              </Button>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -152,6 +116,7 @@ function Dashboard() {
                 <WorkspaceCard
                   key={workspace._id}
                   workspace={workspace}
+                  onOpen={(id) => navigate(`/workspace/${id}`)}
                 />
               ))}
             </div>
@@ -162,7 +127,6 @@ function Dashboard() {
             onClose={() => setIsModalOpen(false)}
             fetchWorkspaces={fetchWorkspaces}
           />
-
         </div>
       </div>
     </>
