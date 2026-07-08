@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const protect = require("../middleware/authMiddleware");
-
 const {
     createProject,
     getProjects,
@@ -11,15 +9,21 @@ const {
     deleteProject,
 } = require("../controllers/projectController");
 
-router.post("/", protect, createProject);
+const authMiddleware = require("../middleware/authMiddleware");
+
+// Create Project
+router.post("/", authMiddleware, createProject);
 
 // Get all projects in a workspace
-router.get("/workspace/:workspaceId", protect, getProjects);
+router.get("/workspace/:workspaceId", authMiddleware, getProjects);
 
-router.get("/:id", protect, getProjectById);
+// Get one project
+router.get("/:id", authMiddleware, getProjectById);
 
-router.put("/:id", protect, updateProject);
+// Update project
+router.put("/:id", authMiddleware, updateProject);
 
-router.delete("/:id", protect, deleteProject);
+// Delete project
+router.delete("/:id", authMiddleware, deleteProject);
 
 module.exports = router;

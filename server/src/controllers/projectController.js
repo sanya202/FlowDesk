@@ -4,12 +4,12 @@ const Workspace = require("../models/workspace");
 // Create Project
 const createProject = async (req, res) => {
     try {
-        const { title, description, workspace } = req.body;
+        const { name, description, workspace } = req.body;
 
-        if (!title || !workspace) {
+        if (!name || !workspace) {
             return res.status(400).json({
                 success: false,
-                message: "Title and Workspace are required",
+                message: "Name and Workspace are required",
             });
         }
 
@@ -27,7 +27,7 @@ const createProject = async (req, res) => {
         }
 
         const project = await Project.create({
-            title,
+            name,
             description,
             workspace,
             createdBy: req.user._id,
@@ -108,11 +108,11 @@ const getProjectById = async (req, res) => {
 const updateProject = async (req, res) => {
     try {
 
-        const { title, description } = req.body;
+        const { name, description } = req.body;
 
         const project = await Project.findByIdAndUpdate(
             req.params.id,
-            { title, description },
+            { name, description },
             { new: true }
         );
 
