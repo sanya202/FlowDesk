@@ -2,7 +2,7 @@ import { FiFolder, FiArrowRight, FiMoreVertical } from "react-icons/fi";
 import Card from "./ui/Card";
 import Button from "./ui/Button";
 
-function WorkspaceCard({ workspace, onOpen }) {
+function WorkspaceCard({ workspace, onOpen, onEdit }) {
   return (
     <Card className="p-6">
       <div className="flex items-start justify-between">
@@ -22,9 +22,18 @@ function WorkspaceCard({ workspace, onOpen }) {
           </div>
         </div>
 
-        <button className="p-2 rounded-lg hover:bg-gray-100 transition">
-          <FiMoreVertical className="text-gray-500" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => onEdit(workspace)}
+            className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+          >
+            Edit
+          </button>
+
+          <button className="p-2 rounded-lg hover:bg-gray-100 transition">
+            <FiMoreVertical className="text-gray-500" />
+          </button>
+        </div>
       </div>
 
       <p className="mt-5 text-gray-600 leading-relaxed min-h-[48px]">
