@@ -66,7 +66,7 @@ const getTasks = async (req, res) => {
         })
             .populate("assignee", "fullName email")
             .populate("createdBy", "fullName email")
-            .populate("project", "title");
+            .populate("project", "name");
 
         return res.status(200).json({
             success: true,
@@ -90,7 +90,7 @@ const getTaskById = async (req, res) => {
         const task = await Task.findById(req.params.id)
             .populate("assignee", "fullName email")
             .populate("createdBy", "fullName email")
-            .populate("project", "title");
+            .populate("project", "name");
 
         if (!task) {
             return res.status(404).json({
