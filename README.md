@@ -10,13 +10,11 @@ Users can create workspaces, spin up projects inside them, break projects down i
 - 🗂️ **Workspaces** — create and manage top-level containers for projects
 - 📁 **Projects** — organize related work inside a workspace
 - ✅ **Tasks** — create, assign, prioritize, and move tasks through status columns
-- 👥 **Task assignment** — assign tasks to specific users
 - 🎯 **Priorities** — Low / Medium / High task prioritization
 - 📊 **Dashboard** — at-a-glance view of workspaces and project statistics
 - 🔒 **Protected routes** — backend middleware verifies every request before touching data
 
-<img width="895" height="635" alt="FlowDesk" src="https://github.com/user-attachments/assets/e35fad80-2350-4bc7-86e3-d60c0e47a306" />
- />
+<img width="935" height="673" alt="Screenshot 2026-09-19 at 4 36 48 PM" src="https://github.com/user-attachments/assets/1f3b4cca-e520-4e6f-875c-e0e22dbd84b0" />
 
 ## Tech Stack
 
